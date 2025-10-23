@@ -9,24 +9,40 @@ import { Api } from '../api';
 })
 export class DashboardPage implements OnInit {
 
-  constructor(private apiService:Api) { }
+  dados: any[] = [];
+  historico: any[] = [];
+
+  constructor(private apiService: Api) {}
 
   ngOnInit() {
-
     this.carregarDados();
-
+    this.carregarHistorico();
   }
 
-
-  carregarDados():any{
-    this.apiService.getSensores() .subscribe({
+  carregarDados(): void {
+    this.apiService.getSensores().subscribe({
       next: (data: any[]) => {
-        console.log(data);
-      }, error : (erro) => {
-        console.log(erro);
+        console.log('Sensores:', data);
+        this.dados = data;
+      },
+      error: (erro) => {
+        console.error('Erro sensores:', erro);
       }
-     });
+    });
+  }
 
+  carregarHistorico(): void {
+    const collection = 'gA5kPz7RqL2mS8vBwT9E';
+    const data = '2025-10-23'; // se quiser tudo, deixe undefined ou string vazia
 
+    this.apiService.getHistoricoDia(collection, data).subscribe({
+      next: (res: any[]) => {
+        console.log('Histórico recebido:', res);
+        this.historico = res;
+      },
+      error: (erro) => {
+        console.error('Erro histórico:', erro);
+      }
+    });
   }
 }

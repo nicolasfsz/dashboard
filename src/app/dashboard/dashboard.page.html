@@ -1,13 +1,102 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>dashboard</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Dashboard - Monitoramento</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="dashboard-content">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">dashboard</ion-title>
+      <ion-title size="large">Dashboard</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div class="container">
+    <!-- Seção de Leituras Atuais -->
+    <section class="section-card">
+      <div class="section-header">
+        <ion-icon name="thermometer-outline" class="section-icon"></ion-icon>
+        <h2>Leituras Atuais</h2>
+      </div>
+
+      <div *ngIf="dados.length > 0; else semDados" class="cards-grid">
+        <div *ngFor="let i of dados; let idx = index" class="reading-card">
+          <div class="card-badge">{{idx + 1}}</div>
+          
+          <div class="reading-item">
+            <ion-icon name="thermometer" class="item-icon temperature"></ion-icon>
+            <div class="item-content">
+              <span class="item-label">Temperatura</span>
+              <span class="item-value">{{ i.temperatura }}°C</span>
+            </div>
+          </div>
+
+          <div class="reading-item">
+            <ion-icon name="water" class="item-icon humidity"></ion-icon>
+            <div class="item-content">
+              <span class="item-label">Umidade</span>
+              <span class="item-value">{{ i.umidade }}%</span>
+            </div>
+          </div>
+
+          <div class="reading-item timestamp">
+            <ion-icon name="time-outline" class="item-icon"></ion-icon>
+            <div class="item-content">
+              <span class="item-label">Timestamp</span>
+              <span class="item-value small">{{ i.timestamp || i.timestemp || i.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #semDados>
+        <div class="empty-state">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <p>Nenhuma leitura disponível no momento.</p>
+        </div>
+      </ng-template>
+    </section>
+
+    <!-- Seção de Histórico -->
+    <section class="section-card">
+      <div class="section-header">
+        <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
+        <h2>Histórico do Dia</h2>
+      </div>
+
+      <div *ngIf="historico.length > 0; else semHistorico" class="history-list">
+        <div *ngFor="let h of historico; let j = index" class="history-item">
+          <div class="history-number">#{{j + 1}}</div>
+          
+          <div class="history-data">
+            <div class="history-row">
+              <div class="history-field">
+                <ion-icon name="thermometer" class="field-icon"></ion-icon>
+                <span class="field-label">Temperatura:</span>
+                <span class="field-value">{{ h.temperatura }}°C</span>
+              </div>
+              
+              <div class="history-field">
+                <ion-icon name="water" class="field-icon"></ion-icon>
+                <span class="field-label">Umidade:</span>
+                <span class="field-value">{{ h.umidade }}%</span>
+              </div>
+            </div>
+            
+            <div class="history-timestamp">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ h.timestamp || h.timestemp || h.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #semHistorico>
+        <div class="empty-state">
+          <ion-icon name="folder-open-outline"></ion-icon>
+          <p>Nenhum histórico encontrado para hoje.</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
 </ion-content>
